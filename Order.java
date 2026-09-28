@@ -13,4 +13,12 @@ public class Order {
         this.client = client;
         this.delivery_address = delivery_address;
     }
+
+    public get_id() {
+        return id;
+    }
+
+    public get_addr() {
+        return delivery_address;
+    }
 }
