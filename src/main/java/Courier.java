@@ -11,10 +11,6 @@ public class Courier extends Person {
     }
 
     //getters
-    public int get_id() {
-        return id;
-    }
-
     public String get_type() {
         return type_delivery;
     }
