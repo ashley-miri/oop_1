@@ -1,13 +1,12 @@
-public class Courier {
+public class Courier extends Person {
 
     //datafields
-    private final int id;
     private final String type_delivery;
     private int order_id = -1;
 
     //constructor
-    public Courier(int id, String type_delivery) {
-        this.id = id;
+    public Courier(int id, String name, String phone, String type_delivery) {
+        super(id, name, phone);
         this.type_delivery = type_delivery;
     }
 
