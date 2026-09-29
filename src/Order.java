@@ -13,7 +13,7 @@ public class Order {
     private String time;
     private int coast;
 
-    //constructors
+    //constructor
     public Order(int id, String delivery_address, String client) {
         this.id = id;
         this.client = client;
