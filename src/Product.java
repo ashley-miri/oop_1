@@ -1,11 +1,11 @@
-public class Products {
+public class Product {
 
     //data fields
     private final String name;
     private final int cost;
     private final int weight;
 
-    public Products(String name, int coast, int weight) {
+    public Product(String name, int coast, int weight) {
         this.name = name;
         this.cost = coast;
         this.weight = weight;
