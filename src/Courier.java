@@ -3,7 +3,7 @@ public class Courier {
     //datafields
     private final int id;
     private final String type_delivery;
-    private int order_id;
+    private int order_id = -1;
 
     //constructor
     public Courier(int id, String type_delivery) {
