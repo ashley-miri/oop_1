@@ -14,19 +14,19 @@ public class Product {
     }
 
     //getters
-    public int get_id() {
+    public int getId() {
         return id;
     }
 
-    public String get_name() {
+    public String getName() {
         return name;
     }
 
-    public int get_cost() {
+    public int getCost() {
         return cost;
     }
 
-    public int get_weight() {
+    public int getWeight() {
         return weight;
     }
 }

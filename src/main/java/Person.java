@@ -13,15 +13,15 @@ public abstract class Person {
     }
 
     //getters
-    public int get_id() {
+    public int getId() {
         return id;
     }
 
-    public String get_name() {
+    public String getName() {
         return name;
     }
 
-    public String get_phone() {
+    public String getPhone() {
         return phone;
     }
 }

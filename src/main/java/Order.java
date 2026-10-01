@@ -5,79 +5,79 @@ public class Order {
 
     //data fields
     private final int id;
-    private final String delivery_address;
+    private final String deliveryAddress;
     private final String client;
     private final List<String> items = new ArrayList<>();
-    private String type_delivery;
+    private String typeDelivery;
     private String courier;
     private String time;
     private int coast;
 
     //constructor
-    public Order(int id, String delivery_address, String client) {
+    public Order(int id, String deliveryAddress, String client) {
         this.id = id;
         this.client = client;
-        this.delivery_address = delivery_address;
+        this.deliveryAddress = deliveryAddress;
     }
 
     //getters
-    public int get_id() {
+    public int getId() {
         return id;
     }
 
-    public String get_address() {
-        return delivery_address;
+    public String getAddress() {
+        return deliveryAddress;
     }
 
-    public String get_client() {
+    public String getClient() {
         return client;
     }
 
-    public String get_type() {
-        return type_delivery;
+    public String getType() {
+        return typeDelivery;
     }
 
-    public String get_courier() {
+    public String getCourier() {
         return courier;
     }
 
-    public String get_time() {
+    public String getTime() {
         return time;
     }
 
-    public int get_coast() {
+    public int getCoast() {
         return coast;
     }
 
-    public List<String> get_items() {
+    public List<String> getItems() {
         return items;
     }
 
     //setters
-    public void set_type(String type_delivery) {
-        this.type_delivery = type_delivery;
+    public void setType(String typeDelivery) {
+        this.typeDelivery = typeDelivery;
     }
 
-    public void set_courier(String courier) {
+    public void setCourier(String courier) {
         this.courier = courier;
     }
 
-    public void set_time(String time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
-    public void set_coast(int coast) {
+    public void setCoast(int coast) {
         this.coast = coast;
     }
 
-    public void set_item(String item) {
+    public void setItem(String item) {
         if (item != null) {
             this.items.add(item);
         }
     }
 
     //remuve
-    public void remove_item(String item) {
+    public void removeItem(String item) {
         this.items.remove(item);
     }
 }

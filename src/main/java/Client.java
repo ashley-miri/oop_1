@@ -1,16 +1,16 @@
 public class Client extends Person {
 
     //datafields
-    private String delivery_address;
+    private String deliveryAddress;
 
     //constructor
-    public Client(int id, String name, String phone, String delivery_address) {
+    public Client(int id, String name, String phone, String deliveryAddress) {
         super(id, name, phone); // Вызов конструктора Person
-        this.delivery_address = delivery_address;
+        this.deliveryAddress = deliveryAddress;
     }
 
     //getters
-    public String getDelivery_address() {
-        return delivery_address;
+    public String getDeliveryAddress() {
+        return deliveryAddress;
     }
 }

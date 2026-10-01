@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Delivery_service {
+public class DeliveryService {
 
     //data fields
     private final List<Order> orders = new ArrayList<>();
@@ -9,37 +9,37 @@ public class Delivery_service {
     private final List<Product> products = new ArrayList<>();
 
     //getters
-    public List<Order> get_orders() {
+    public List<Order> getOrders() {
         return orders;
     }
 
-    public List<Courier> get_couriers() {
+    public List<Courier> getCouriers() {
         return couriers;
     }
 
-    public List<Product> get_products() {
+    public List<Product> getProducts() {
         return products;
     }
 
     //setters
-    public void add_order(Order order) {
+    public void addOrder(Order order) {
         if (order != null) {
             orders.add(order);
         }
     }
 
-    public void add_courier(Courier courier) {
+    public void addCourier(Courier courier) {
         if (courier != null) {
             couriers.add(courier);
         }
     }
 
-    public void add_product(Product product) {
+    public void addProduct(Product product) {
         if (product != null) {
             products.add(product);
         }
     }
 
     //functions
-    public static void order_processing() {}
+    public static void orderProcessing() {}
 }

@@ -1,26 +1,26 @@
 public class Courier extends Person {
 
     //datafields
-    private final String type_delivery;
-    private int order_id = -1;
+    private final String typeDelivery;
+    private int orderId = -1;
 
     //constructor
-    public Courier(int id, String name, String phone, String type_delivery) {
+    public Courier(int id, String name, String phone, String typeDelivery) {
         super(id, name, phone);
-        this.type_delivery = type_delivery;
+        this.typeDelivery = typeDelivery;
     }
 
     //getters
-    public String get_type() {
-        return type_delivery;
+    public String getType() {
+        return typeDelivery;
     }
 
-    public int get_order_id() {
-        return order_id;
+    public int getOrderId() {
+        return orderId;
     }
 
     //setters
-    public void set_order_id(int order_id) {
-        this.order_id = order_id;
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 }
