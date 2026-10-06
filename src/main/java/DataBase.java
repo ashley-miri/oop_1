@@ -1,6 +1,3 @@
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -55,19 +52,24 @@ public class DataBase {
     }
 
     //add new client
-    public void saveClient(Client client) throws SQLException {
+    public int saveClient(Client client) throws SQLException {
         String sql =
-            "INSERT INTO clients (id, name, phone, address) VALUES (?, ?, ?, ?)";
+            "INSERT INTO clients (name, phone, address) VALUES (?, ?, ?)";
         try (
             Connection conn = connect();
             PreparedStatement ps = conn.prepareStatement(sql)
         ) {
-            ps.setInt(1, client.getId());
-            ps.setString(2, client.getName());
-            ps.setString(3, client.getPhone());
-            ps.setString(4, client.getDeliveryAddress());
+            ps.setString(1, client.getName());
+            ps.setString(2, client.getPhone());
+            ps.setString(3, client.getDeliveryAddress());
             ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
         }
+        throw new SQLException("База не вернула id нового клиента");
     }
 
     public Client findClient(int id) throws SQLException {
