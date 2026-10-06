@@ -2,7 +2,7 @@ public class Courier extends Person {
 
     //datafields
     private final String typeDelivery;
-    private int orderId = -1;
+    private boolean busyStatus = false;
 
     //constructor
     public Courier(int id, String name, String phone, String typeDelivery) {
@@ -15,12 +15,12 @@ public class Courier extends Person {
         return typeDelivery;
     }
 
-    public int getOrderId() {
-        return orderId;
+    public boolean isBusy() {
+        return busyStatus;
     }
 
     //setters
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
+    public void setBusy(boolean busyStatus) {
+        this.busyStatus = busyStatus;
     }
 }

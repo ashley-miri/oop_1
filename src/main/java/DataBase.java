@@ -7,12 +7,5 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class DataBase {
-
     //function
-    public static void loadData() {
-        try {
-        } catch (IOException e) {
-            System.out.println("Не удалось прочитать файл: " + e.getMessage());
-        }
-    }
 }

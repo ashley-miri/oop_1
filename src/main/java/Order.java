@@ -5,19 +5,15 @@ public class Order {
 
     //data fields
     private final int id;
-    private final String deliveryAddress;
-    private final String client;
-    private final List<String> items = new ArrayList<>();
-    private String typeDelivery;
-    private String courier;
+    private final int clientId;
+    private final List<Product> items = new ArrayList<>();
+    private int courierId;
     private String time;
-    private int coast;
 
     //constructor
-    public Order(int id, String deliveryAddress, String client) {
+    public Order(int id, int clientId) {
         this.id = id;
-        this.client = client;
-        this.deliveryAddress = deliveryAddress;
+        this.clientId = clientId;
     }
 
     //getters
@@ -25,59 +21,47 @@ public class Order {
         return id;
     }
 
-    public String getAddress() {
-        return deliveryAddress;
+    public int getClientId() {
+        return clientId;
     }
 
-    public String getClient() {
-        return client;
-    }
-
-    public String getType() {
-        return typeDelivery;
-    }
-
-    public String getCourier() {
-        return courier;
+    public int getCourierId() {
+        return courierId;
     }
 
     public String getTime() {
         return time;
     }
 
-    public int getCoast() {
-        return coast;
-    }
-
-    public List<String> getItems() {
+    public List<Product> getItems() {
         return items;
     }
 
-    //setters
-    public void setType(String typeDelivery) {
-        this.typeDelivery = typeDelivery;
+    public int getCost() {
+        int cost = 0;
+        for (Product item : items) {
+            cost += item.getCost();
+        }
+        return cost;
     }
 
-    public void setCourier(String courier) {
-        this.courier = courier;
+    //setters
+    public void setCourierId(int courierId) {
+        this.courierId = courierId;
     }
 
     public void setTime(String time) {
         this.time = time;
     }
 
-    public void setCoast(int coast) {
-        this.coast = coast;
-    }
-
-    public void setItem(String item) {
+    public void addItem(Product item) {
         if (item != null) {
             this.items.add(item);
         }
     }
 
     //remuve
-    public void removeItem(String item) {
+    public void removeItem(Product item) {
         this.items.remove(item);
     }
 }
