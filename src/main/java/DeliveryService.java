@@ -17,7 +17,6 @@ public class DeliveryService {
             orders.add(order);
         }
     }
-}
 
     //functions
     private void setOrderCourier(Order order, Courier courier) {
