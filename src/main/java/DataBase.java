@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import sun.jvm.hotspot.debugger.win32.coff.COFFException;
 
 public class DataBase {
 
@@ -71,14 +70,14 @@ public class DataBase {
         }
     }
 
-    public Client findClient(Client client) throws SQLException {
+    public Client findClient(int id) throws SQLException {
         String sql =
             "SELECT id, name, phone, address FROM clients WHERE id = ?";
         try (
             Connection conn = connect();
             PreparedStatement ps = conn.prepareStatement(sql)
         ) {
-            ps.setInt(1, client.getId());
+            ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return new Client(
