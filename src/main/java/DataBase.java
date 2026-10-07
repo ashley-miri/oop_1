@@ -41,6 +41,12 @@ public class DataBase {
             phone   TEXT    NOT NULL,
             address   TEXT    NOT NULL
         )""";
+        String admins = """
+        CREATE TABLE IF NOT EXISTS clients (
+            id     INTEGER PRIMARY KEY,
+            name   TEXT    NOT NULL,
+            phone   TEXT    NOT NULL
+        )""";
         try (
             Connection conn = connect();
             Statement st = conn.createStatement()
@@ -48,6 +54,7 @@ public class DataBase {
             st.execute(products);
             st.execute(couriers);
             st.execute(clients);
+            st.execute(admins);
         }
     }
 
@@ -94,6 +101,21 @@ public class DataBase {
         return null;
     }
 
+    public void saveProduct(Product product) throws SQLException {
+        String sql =
+            "INSERT INTO products (name, name_lower, cost, weight) VALUES (?, ?, ?, ?)";
+        try (
+            Connection conn = connect();
+            PreparedStatement ps = conn.prepareStatement(sql);
+        ) {
+            ps.setString(1, product.getName());
+            ps.setString(2, product.getName().toLowerCase());
+            ps.setInt(3, product.getCost());
+            ps.setInt(4, product.getWeight());
+            ps.executeUpdate();
+        }
+    }
+
     public List<Product> findProduct(String name) throws SQLException {
         List<Product> result = new ArrayList<>();
         String sql =
@@ -122,6 +144,20 @@ public class DataBase {
     //выглядит дико но за счет %% помещает вообще все продукты в список что удобно
     public List<Product> loadProducts() throws SQLException {
         return findProduct("");
+    }
+
+    public void saveСourier(Courier courier) throws SQLException {
+        String sql =
+            "INSERT INTO couriers (name, phone, type_delivery) VALUES (?, ?, ?)";
+        try (
+            Connection conn = connect();
+            PreparedStatement ps = conn.prepareStatement(sql);
+        ) {
+            ps.setString(1, courier.getName());
+            ps.setString(2, courier.getPhone());
+            ps.setString(3, courier.getType());
+            ps.executeUpdate();
+        }
     }
 
     public List<Courier> loadCouriers() throws SQLException {
