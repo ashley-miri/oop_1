@@ -39,13 +39,17 @@ public class DataBase {
             id     TEXT PRIMARY KEY,
             name   TEXT    NOT NULL,
             phone   TEXT    NOT NULL,
-            address   TEXT    NOT NULL
+            address   TEXT    NOT NULL,
+            login   TEXT    NOT NULL UNIQUE,
+            password_hash   TEXT    NOT NULL
         )""";
         String admins = """
         CREATE TABLE IF NOT EXISTS admins (
             id     TEXT PRIMARY KEY,
             name   TEXT    NOT NULL,
-            phone   TEXT    NOT NULL
+            phone   TEXT    NOT NULL,
+            login   TEXT    NOT NULL UNIQUE,
+            password_hash   TEXT    NOT NULL
         )""";
         try (
             Connection conn = connect();
@@ -61,7 +65,7 @@ public class DataBase {
     //add new client
     public void saveClient(Client client) throws SQLException {
         String sql =
-            "INSERT INTO clients (id, name, phone, address) VALUES (?, ?, ?, ?)";
+            "INSERT INTO clients (id, name, phone, address, login, password_hash) VALUES (?, ?, ?, ?, ?, ?)";
         try (
             Connection conn = connect();
             PreparedStatement ps = conn.prepareStatement(sql)
@@ -69,14 +73,16 @@ public class DataBase {
             ps.setString(1, client.getId().toString());
             ps.setString(2, client.getName());
             ps.setString(3, client.getPhone());
-            ps.setString(4, client.getDeliveryAddress());
+            ps.setString(4, client.getLogin());
+            ps.setString(5, client.getPasswordHash());
+            ps.setString(6, client.getDeliveryAddress());
             ps.executeUpdate();
         }
     }
 
     public Client findClient(UUID id) throws SQLException {
         String sql =
-            "SELECT id, name, phone, address FROM clients WHERE id = ?";
+            "SELECT id, name, phone, address, login, password_hash FROM clients WHERE id = ?";
         try (
             Connection conn = connect();
             PreparedStatement ps = conn.prepareStatement(sql)
@@ -88,7 +94,9 @@ public class DataBase {
                         UUID.fromString(rs.getString("id")),
                         rs.getString("name"),
                         rs.getString("phone"),
-                        rs.getString("address")
+                        rs.getString("address"),
+                        rs.getString("login"),
+                        rs.getString("password_hash")
                     );
                 }
             }
