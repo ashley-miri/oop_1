@@ -1,19 +1,21 @@
+import java.util.UUID;
+
 public abstract class Person {
 
     //data fields
-    protected int id;
-    protected String name;
-    protected String phone;
+    private final UUID id;
+    private final String name;
+    private final String phone;
 
     //constructor
-    public Person(int id, String name, String phone) {
+    protected Person(UUID id, String name, String phone) {
         this.id = id;
         this.name = name;
         this.phone = phone;
     }
 
     //getters
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 

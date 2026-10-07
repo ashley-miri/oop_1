@@ -6,10 +6,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class DataBase {
 
-    //function
     //Connection to db
     private static final String URL = "jdbc:sqlite:data/delivery.db";
 
@@ -29,21 +29,21 @@ public class DataBase {
         )""";
         String couriers = """
         CREATE TABLE IF NOT EXISTS couriers (
-            id     INTEGER PRIMARY KEY,
+            id     TEXT PRIMARY KEY,
             name   TEXT    NOT NULL,
             phone   TEXT    NOT NULL,
             type_delivery   TEXT    NOT NULL
         )""";
         String clients = """
         CREATE TABLE IF NOT EXISTS clients (
-            id     INTEGER PRIMARY KEY,
+            id     TEXT PRIMARY KEY,
             name   TEXT    NOT NULL,
             phone   TEXT    NOT NULL,
             address   TEXT    NOT NULL
         )""";
         String admins = """
-        CREATE TABLE IF NOT EXISTS clients (
-            id     INTEGER PRIMARY KEY,
+        CREATE TABLE IF NOT EXISTS admins (
+            id     TEXT PRIMARY KEY,
             name   TEXT    NOT NULL,
             phone   TEXT    NOT NULL
         )""";
@@ -59,38 +59,33 @@ public class DataBase {
     }
 
     //add new client
-    public int saveClient(Client client) throws SQLException {
+    public void saveClient(Client client) throws SQLException {
         String sql =
-            "INSERT INTO clients (name, phone, address) VALUES (?, ?, ?)";
+            "INSERT INTO clients (id, name, phone, address) VALUES (?, ?, ?, ?)";
         try (
             Connection conn = connect();
             PreparedStatement ps = conn.prepareStatement(sql)
         ) {
-            ps.setString(1, client.getName());
-            ps.setString(2, client.getPhone());
-            ps.setString(3, client.getDeliveryAddress());
+            ps.setString(1, client.getId().toString());
+            ps.setString(2, client.getName());
+            ps.setString(3, client.getPhone());
+            ps.setString(4, client.getDeliveryAddress());
             ps.executeUpdate();
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) {
-                    return rs.getInt(1);
-                }
-            }
         }
-        throw new SQLException("База не вернула id нового клиента");
     }
 
-    public Client findClient(int id) throws SQLException {
+    public Client findClient(UUID id) throws SQLException {
         String sql =
             "SELECT id, name, phone, address FROM clients WHERE id = ?";
         try (
             Connection conn = connect();
             PreparedStatement ps = conn.prepareStatement(sql)
         ) {
-            ps.setInt(1, id);
+            ps.setString(1, id.toString());
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return new Client(
-                        rs.getInt("id"),
+                        UUID.fromString(rs.getString("id")),
                         rs.getString("name"),
                         rs.getString("phone"),
                         rs.getString("address")
@@ -106,7 +101,7 @@ public class DataBase {
             "INSERT INTO products (name, name_lower, cost, weight) VALUES (?, ?, ?, ?)";
         try (
             Connection conn = connect();
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql)
         ) {
             ps.setString(1, product.getName());
             ps.setString(2, product.getName().toLowerCase());
@@ -146,16 +141,17 @@ public class DataBase {
         return findProduct("");
     }
 
-    public void saveСourier(Courier courier) throws SQLException {
+    public void saveCourier(Courier courier) throws SQLException {
         String sql =
-            "INSERT INTO couriers (name, phone, type_delivery) VALUES (?, ?, ?)";
+            "INSERT INTO couriers (id, name, phone, type_delivery) VALUES (?, ?, ?, ?)";
         try (
             Connection conn = connect();
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql)
         ) {
-            ps.setString(1, courier.getName());
-            ps.setString(2, courier.getPhone());
-            ps.setString(3, courier.getType());
+            ps.setString(1, courier.getId().toString());
+            ps.setString(2, courier.getName());
+            ps.setString(3, courier.getPhone());
+            ps.setString(4, courier.getType());
             ps.executeUpdate();
         }
     }
@@ -171,7 +167,7 @@ public class DataBase {
             while (rs.next()) {
                 result.add(
                     new Courier(
-                        rs.getInt("id"),
+                        UUID.fromString(rs.getString("id")),
                         rs.getString("name"),
                         rs.getString("phone"),
                         rs.getString("type_delivery")

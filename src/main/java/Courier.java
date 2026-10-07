@@ -1,3 +1,5 @@
+import java.util.UUID;
+
 public class Courier extends Person {
 
     //datafields
@@ -5,7 +7,7 @@ public class Courier extends Person {
     private boolean busyStatus = false;
 
     //constructor
-    public Courier(int id, String name, String phone, String typeDelivery) {
+    public Courier(UUID id, String name, String phone, String typeDelivery) {
         super(id, name, phone);
         this.typeDelivery = typeDelivery;
     }

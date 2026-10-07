@@ -1,17 +1,18 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Order {
 
     //data fields
     private final int id;
-    private final int clientId;
+    private final UUID clientId;
     private final List<Product> items = new ArrayList<>();
-    private int courierId;
+    private UUID courierId;
     private String time;
 
     //constructor
-    public Order(int id, int clientId) {
+    public Order(int id, UUID clientId) {
         this.id = id;
         this.clientId = clientId;
     }
@@ -21,11 +22,11 @@ public class Order {
         return id;
     }
 
-    public int getClientId() {
+    public UUID getClientId() {
         return clientId;
     }
 
-    public int getCourierId() {
+    public UUID getCourierId() {
         return courierId;
     }
 
@@ -46,7 +47,7 @@ public class Order {
     }
 
     //setters
-    public void setCourierId(int courierId) {
+    public void setCourierId(UUID courierId) {
         this.courierId = courierId;
     }
 
@@ -60,7 +61,7 @@ public class Order {
         }
     }
 
-    //remuve
+    //remove
     public void removeItem(Product item) {
         this.items.remove(item);
     }
