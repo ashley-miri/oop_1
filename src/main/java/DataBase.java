@@ -73,9 +73,9 @@ public class DataBase {
             ps.setString(1, client.getId().toString());
             ps.setString(2, client.getName());
             ps.setString(3, client.getPhone());
-            ps.setString(4, client.getLogin());
-            ps.setString(5, client.getPasswordHash());
-            ps.setString(6, client.getDeliveryAddress());
+            ps.setString(4, client.getDeliveryAddress());
+            ps.setString(5, client.getLogin());
+            ps.setString(6, client.getPasswordHash());
             ps.executeUpdate();
         }
     }

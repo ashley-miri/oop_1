@@ -14,4 +14,8 @@ public class ConsoleIO {
             }
         }
     }
+
+    public static void outText(String text) {
+        System.out.print("\n" + text);
+    }
 }

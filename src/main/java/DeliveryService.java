@@ -26,25 +26,12 @@ public class DeliveryService {
         return nextOrderId++;
     }
 
-    private void setOrderCourier(Order order, Courier courier) {
-        if (courier.isBusy()) {
-            throw new BusyCourierException(
-                "Courier id " + courier.getId() + " is busy now"
-            );
+    private void releaseCourier(Order order) {
+        for (Courier courier : couriers) {
+            if (courier.getId().equals(order.getCourierId())) {
+                courier.setBusy(false);
+            }
         }
-        order.setCourierId(courier.getId());
-        order.setStatus(OrderStatus.ASSIGNED);
-        courier.setBusy(true);
-    }
-
-    private void completeOrder(Order order, Courier courier) {
-        if (!courier.getId().equals(order.getCourierId())) {
-            throw new BusyCourierException(
-                "This courier is not involved with this order"
-            );
-        }
-        order.setStatus(OrderStatus.DELIVERED);
-        courier.setBusy(false);
     }
 
     private Courier findFreeCourier(TypeDelivery type) {
@@ -59,25 +46,51 @@ public class DeliveryService {
     private void tryAssignCourier(Order order, TypeDelivery type) {
         Courier courier = findFreeCourier(type);
         if (courier == null) {
-            System.out.print(
-                "\nAll couriers for this delivery method are currently busy. Please try again later or change the delivery method."
+            ConsoleIO.outText(
+                "All couriers for this delivery method are currently busy. Please try again later or change the delivery method."
             );
         } else {
-            try {
-                setOrderCourier(order, courier);
-            } catch (BusyCourierException e) {
-                System.out.print(e);
-            }
+            order.setStatus(OrderStatus.ASSIGNED);
+            order.setCourierId(courier.getId());
+            courier.setBusy(true);
         }
     }
 
     private void assignCourier(Order order) {
-        if (order.getStatus() == OrderStatus.CREATED) {
-            System.out.print(
-                "\nSelect a delivery method (enter the number):\n1)Ordinary\nExpress\nSelf-pickup"
+        if (
+            order.getStatus() == OrderStatus.ASSIGNED ||
+            order.getStatus() == OrderStatus.SELF_PICKUP
+        ) {
+            ConsoleIO.outText(
+                "Are you sure you want to change the delivery type?\n1 - YES\n2 - NO"
             );
             while (true) {
-                int i = ConsoleIO.readInt("\nEnter: ");
+                boolean f = false;
+                int i = ConsoleIO.readInt("Enter: ");
+                switch (i) {
+                    case 1:
+                        releaseCourier(order);
+                        order.setStatus(OrderStatus.CREATED);
+                        f = true;
+                        break;
+                    case 2:
+                        return;
+                    default:
+                        ConsoleIO.outText(
+                            "Invalid value; enter a number from 1 to 2."
+                        );
+                }
+                if (f) {
+                    break;
+                }
+            }
+        }
+        if (order.getStatus() == OrderStatus.CREATED) {
+            ConsoleIO.outText(
+                "Select a delivery method (enter the number):\n1)Ordinary\n2)Express\n3)Self-pickup"
+            );
+            while (true) {
+                int i = ConsoleIO.readInt("Enter: ");
                 switch (i) {
                     case 1:
                         tryAssignCourier(order, TypeDelivery.ORDINARY);
@@ -86,16 +99,21 @@ public class DeliveryService {
                         tryAssignCourier(order, TypeDelivery.EXPRESS);
                         return;
                     case 3:
-                        System.out.print(
-                            "\nYour order will be prepared within half an hour; please visit the selected pickup point to collect it."
+                        ConsoleIO.outText(
+                            "Your order will be prepared within half an hour; please visit the selected pickup point to collect it."
                         );
+                        order.setStatus(OrderStatus.SELF_PICKUP);
                         return;
                     default:
-                        System.out.print(
-                            "\nInvalid value; enter a number from 1 to 3."
+                        ConsoleIO.outText(
+                            "Invalid value; enter a number from 1 to 3."
                         );
                 }
             }
+        } else {
+            ConsoleIO.outText(
+                "The item has either been handed over for delivery or received."
+            );
         }
     }
 
