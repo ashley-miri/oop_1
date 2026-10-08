@@ -159,7 +159,7 @@ public class DataBase {
             ps.setString(1, courier.getId().toString());
             ps.setString(2, courier.getName());
             ps.setString(3, courier.getPhone());
-            ps.setString(4, courier.getType());
+            ps.setString(4, courier.getType().name());
             ps.executeUpdate();
         }
     }
@@ -178,7 +178,7 @@ public class DataBase {
                         UUID.fromString(rs.getString("id")),
                         rs.getString("name"),
                         rs.getString("phone"),
-                        rs.getString("type_delivery")
+                        TypeDelivery.valueOf(rs.getString("type_delivery"))
                     )
                 );
             }

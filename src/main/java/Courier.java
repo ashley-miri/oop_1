@@ -3,17 +3,22 @@ import java.util.UUID;
 public class Courier extends Person {
 
     //datafields
-    private final String typeDelivery;
+    private final TypeDelivery typeDelivery;
     private boolean busyStatus = false;
 
     //constructor
-    public Courier(UUID id, String name, String phone, String typeDelivery) {
+    public Courier(
+        UUID id,
+        String name,
+        String phone,
+        TypeDelivery typeDelivery
+    ) {
         super(id, name, phone);
         this.typeDelivery = typeDelivery;
     }
 
     //getters
-    public String getType() {
+    public TypeDelivery getType() {
         return typeDelivery;
     }
 

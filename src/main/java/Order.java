@@ -8,6 +8,7 @@ public class Order {
     private final int id;
     private final UUID clientId;
     private final List<Product> items = new ArrayList<>();
+    private OrderStatus status = OrderStatus.CREATED;
     private UUID courierId;
     private String time;
 
@@ -46,6 +47,10 @@ public class Order {
         return cost;
     }
 
+    public OrderStatus getStatus() {
+        return status;
+    }
+
     //setters
     public void setCourierId(UUID courierId) {
         this.courierId = courierId;
@@ -59,6 +64,18 @@ public class Order {
         if (item != null) {
             this.items.add(item);
         }
+    }
+
+    public void setStatus(OrderStatus newStatus) {
+        if (!this.status.canTransitionTo(newStatus)) {
+            throw new InvalidStatusTransitionException(
+                "It is not possible to transition from this status " +
+                    this.status +
+                    " to " +
+                    newStatus
+            );
+        }
+        this.status = newStatus;
     }
 
     //remove
