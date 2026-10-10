@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,7 +37,7 @@ public class Order {
     }
 
     public List<Product> getItems() {
-        return items;
+        return Collections.unmodifiableList(items);
     }
 
     public int getCost() {
@@ -60,18 +61,20 @@ public class Order {
         this.time = time;
     }
 
-    public void addItem(Product item) {
-        if (item != null) {
-            this.items.add(item);
+    public boolean addItem(Product item) {
+        if (status != OrderStatus.CREATED || item == null) {
+            return false;
         }
+        items.add(item);
+        return true;
     }
 
     public void setStatus(OrderStatus newStatus) {
         if (!this.status.canTransitionTo(newStatus)) {
             throw new InvalidStatusTransitionException(
-                "It is not possible to transition from this status " +
+                "Невозможно поменять данный статус " +
                     this.status +
-                    " to " +
+                    " на этот " +
                     newStatus
             );
         }
@@ -79,7 +82,10 @@ public class Order {
     }
 
     //remove
-    public void removeItem(Product item) {
-        this.items.remove(item);
+    public boolean removeItem(Product item) {
+        if (status != OrderStatus.CREATED || item == null) {
+            return false;
+        }
+        return items.remove(item);
     }
 }
