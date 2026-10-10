@@ -1,3 +1,4 @@
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -19,6 +20,8 @@ public class DataBase {
 
     //initialising db
     public void init() throws SQLException {
+        new File("data").mkdirs();
+
         String products = """
         CREATE TABLE IF NOT EXISTS products (
             id     INTEGER PRIMARY KEY,
@@ -80,14 +83,16 @@ public class DataBase {
         }
     }
 
-    public Client findClient(UUID id) throws SQLException {
+    private Client findClient(String find, String value) throws SQLException {
         String sql =
-            "SELECT id, name, phone, address, login, password_hash FROM clients WHERE id = ?";
+            "SELECT id, name, phone, address, login, password_hash FROM clients WHERE " +
+            find +
+            " = ?";
         try (
             Connection conn = connect();
             PreparedStatement ps = conn.prepareStatement(sql)
         ) {
-            ps.setString(1, id.toString());
+            ps.setString(1, value);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return new Client(
@@ -102,6 +107,69 @@ public class DataBase {
             }
         }
         return null;
+    }
+
+    public Client findClientById(UUID id) throws SQLException {
+        return findClient("id", id.toString());
+    }
+
+    public Client findClientByLogin(String login) throws SQLException {
+        return findClient("login", login);
+    }
+
+    public void saveAdmin(Admin admin) throws SQLException {
+        String sql =
+            "INSERT INTO admins (id, name, phone, login, password_hash) VALUES (?, ?, ?, ?, ?)";
+        try (
+            Connection conn = connect();
+            PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+            ps.setString(1, admin.getId().toString());
+            ps.setString(2, admin.getName());
+            ps.setString(3, admin.getPhone());
+            ps.setString(4, admin.getLogin());
+            ps.setString(5, admin.getPasswordHash());
+            ps.executeUpdate();
+        }
+    }
+
+    private Admin findAdmin(String find, String value) throws SQLException {
+        String sql =
+            "SELECT id, name, phone, login, password_hash FROM admins WHERE " +
+            find +
+            " = ?";
+        try (
+            Connection conn = connect();
+            PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+            ps.setString(1, value);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Admin(
+                        UUID.fromString(rs.getString("id")),
+                        rs.getString("name"),
+                        rs.getString("phone"),
+                        rs.getString("login"),
+                        rs.getString("password_hash")
+                    );
+                }
+            }
+        }
+        return null;
+    }
+
+    public Admin findAdminById(UUID id) throws SQLException {
+        return findAdmin("id", id.toString());
+    }
+
+    public Admin findAdminByLogin(String login) throws SQLException {
+        return findAdmin("login", login);
+    }
+
+    public boolean loginExists(String login) throws SQLException {
+        return (
+            findClientByLogin(login) != null || findAdminByLogin(login) != null
+        );
     }
 
     public void saveProduct(Product product) throws SQLException {
