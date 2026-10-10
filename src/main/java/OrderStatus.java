@@ -12,7 +12,9 @@ public enum OrderStatus {
             case CREATED -> next == ASSIGNED ||
                 next == CANCELLED ||
                 next == SELF_PICKUP;
-            case SELF_PICKUP -> next == PICKED_BY_BUYER || next == CANCELLED;
+            case SELF_PICKUP -> next == PICKED_BY_BUYER ||
+                next == CANCELLED ||
+                next == CREATED;
             case ASSIGNED -> next == IN_DELIVERY ||
                 next == CREATED ||
                 next == CANCELLED;
