@@ -1,11 +1,11 @@
 public enum OrderStatus {
-    CREATED,
-    ASSIGNED,
-    IN_DELIVERY,
-    DELIVERED,
-    CANCELLED,
-    SELF_PICKUP,
-    PICKED_BY_BUYER;
+    CREATED("Создан"),
+    ASSIGNED("Курьер назначен"),
+    IN_DELIVERY("В доставке"),
+    DELIVERED("Доставлен"),
+    CANCELLED("Отменён"),
+    SELF_PICKUP("Ожидает самовывоза"),
+    PICKED_BY_BUYER("Получен покупателем");
 
     public boolean canTransitionTo(OrderStatus next) {
         return switch (this) {
@@ -21,5 +21,15 @@ public enum OrderStatus {
             case IN_DELIVERY -> next == DELIVERED;
             case DELIVERED, CANCELLED, PICKED_BY_BUYER -> false;
         };
+    }
+
+    private final String label;
+
+    OrderStatus(String label) {
+        this.label = label;
+    }
+
+    public String getLabel() {
+        return label;
     }
 }
