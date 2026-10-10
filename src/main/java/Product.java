@@ -29,4 +29,8 @@ public class Product {
     public int getWeight() {
         return weight;
     }
+
+    public String toString() {
+        return name + " — " + cost + " руб., " + weight + " г";
+    }
 }
