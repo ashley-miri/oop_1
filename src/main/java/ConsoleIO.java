@@ -11,7 +11,7 @@ public class ConsoleIO {
             try {
                 return Integer.parseInt(scan.nextLine().trim());
             } catch (NumberFormatException e) {
-                outText("You need to enter an integer.");
+                outText("Введи значение принадлежащее множеству Z");
             }
         }
     }
@@ -23,7 +23,7 @@ public class ConsoleIO {
             if (!str.isEmpty()) {
                 return str;
             } else {
-                outText("Enter a non-empty string.");
+                outText("Введи непустую строку");
             }
         }
     }
@@ -34,7 +34,7 @@ public class ConsoleIO {
 
     public static <T> T chooseFromList(List<T> list) {
         if (list.isEmpty()) {
-            outText("List is empty.");
+            outText("Лист пуст");
             return null;
         }
 
