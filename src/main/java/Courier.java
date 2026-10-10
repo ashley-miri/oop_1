@@ -30,4 +30,15 @@ public class Courier extends Person {
     public void setBusy(boolean busyStatus) {
         this.busyStatus = busyStatus;
     }
+
+    public String toString() {
+        return (
+            getName() +
+            ", тел. " +
+            getPhone() +
+            ", доставка: " +
+            typeDelivery.getLabel() +
+            (busyStatus ? " — занят" : " — свободен")
+        );
+    }
 }
