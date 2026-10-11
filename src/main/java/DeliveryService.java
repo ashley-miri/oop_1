@@ -1,16 +1,27 @@
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class DeliveryService {
 
     //data fields
     private int nextOrderId = 1;
     private final List<Order> orders = new ArrayList<>();
-    private final List<Courier> couriers = new ArrayList<>(); //db.loadCouriers();
+    private final List<Courier> couriers = new ArrayList<>();
+
+    public DeliveryService(List<Courier> couriersFromDb) {
+        couriers.addAll(couriersFromDb);
+    }
 
     //getters
     public List<Order> getOrders() {
         return orders;
+    }
+
+    public List<Courier> getCouriers() {
+        return couriers;
     }
 
     //setters
@@ -20,9 +31,27 @@ public class DeliveryService {
         }
     }
 
+    public void addCourier(Courier courier) {
+        if (courier != null) {
+            couriers.add(courier);
+        }
+    }
+
     //functions
-    private int setOrderId() {
-        return nextOrderId++;
+    public Order createOrder(UUID clientId) {
+        return new Order(nextOrderId++, clientId);
+    }
+
+    public Courier findCourier(UUID id) {
+        if (id == null) {
+            return null;
+        }
+        for (Courier courier : couriers) {
+            if (courier.getId().equals(id)) {
+                return courier;
+            }
+        }
+        return null;
     }
 
     private void releaseCourier(Order order) {

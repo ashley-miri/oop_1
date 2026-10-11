@@ -1,5 +1,8 @@
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import javax.xml.crypto.Data;
 
 public class ConsoleIO {
 
@@ -100,7 +103,7 @@ public class ConsoleIO {
         }
         outText("Выберете тип доствки:\n1)Обычная\n2)Скоростная\n3)Самовывоз");
         while (true) {
-            int i = readInt("Enter: ");
+            int i = readInt("Ввод: ");
             switch (i) {
                 case 1:
                     return TypeDelivery.ORDINARY;
@@ -119,7 +122,7 @@ public class ConsoleIO {
     public static boolean takeWriteAccess(String text) {
         while (true) {
             outText("Вы уверены что хотите " + text + " ?\n1)ДА\n2)НЕТ");
-            int i = ConsoleIO.readInt("Enter: ");
+            int i = ConsoleIO.readInt("Ввод: ");
             switch (i) {
                 case 1:
                     return true;
