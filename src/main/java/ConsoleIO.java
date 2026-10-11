@@ -32,7 +32,7 @@ public class ConsoleIO {
         System.out.print("\n" + text);
     }
 
-    public static <T> T chooseFromList(List<T> list) {
+    private static <T> T browse(List<T> list, boolean select) {
         if (list.isEmpty()) {
             outText("Лист пуст");
             return null;
@@ -44,13 +44,13 @@ public class ConsoleIO {
                 if (5 * page + i - 1 > list.size() - 1) {
                     break;
                 }
-                outText(i + ") " + list.get(5 * page + i - 1).toString());
+                outText(i + ") " + list.get(5 * page + i - 1));
             }
             outText("6)Предыдущая страница\n7)Следующая страница\n8)Выход");
             int r = readInt("Ввод: ");
             switch (r) {
                 case 1, 2, 3, 4, 5:
-                    if (5 * page + r - 1 > list.size() - 1) {
+                    if (!select || 5 * page + r - 1 > list.size() - 1) {
                         outText("Некорректное значение, повторите ввод");
                         continue;
                     }
@@ -67,7 +67,7 @@ public class ConsoleIO {
                 case 7:
                     if ((list.size() + 4) / 5 == page + 1) {
                         outText(
-                            "Это последняя страница, последущей не существует"
+                            "Это последняя страница, следующей не существует"
                         );
                         break;
                     }
@@ -80,6 +80,14 @@ public class ConsoleIO {
                     break;
             }
         }
+    }
+
+    public static <T> T chooseFromList(List<T> list) {
+        return browse(list, true);
+    }
+
+    public static void showList(List<?> list) {
+        browse(list, false);
     }
 
     public static TypeDelivery chooseTypeDelivery(OrderStatus status) {
@@ -131,6 +139,16 @@ public class ConsoleIO {
                     );
                     break;
             }
+        }
+    }
+
+    public static int readPositiveInt(String prompt) {
+        while (true) {
+            int value = ConsoleIO.readInt(prompt);
+            if (value > 0) {
+                return value;
+            }
+            ConsoleIO.outText("Значение должно быть больше нуля");
         }
     }
 }
