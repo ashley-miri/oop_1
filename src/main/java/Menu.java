@@ -159,13 +159,139 @@ public class Menu {
         }
     }
 
-    private void createOrder(Client client) {}
+    private void createOrder(Client client) {
+        Order order = service.createOrder(client.getId());
+        boolean pick = true;
+        while (pick) {
+            List<Product> items = order.getItems();
+            ConsoleIO.outText(
+                "1)Добавить товар\n" +
+                    "2)Просмотр корзины\n" +
+                    "3)Убрать товар\n" +
+                    "4)Перейти к доставке\n" +
+                    "5)Отменить оформление"
+            );
+            switch (ConsoleIO.readInt("Ввод: ")) {
+                case 1 -> {
+                    String query = ConsoleIO.readStr(
+                        "Название товара (или его часть): "
+                    );
+                    try {
+                        List<Product> found = data.findProduct(query);
+                        if (found.isEmpty()) {
+                            ConsoleIO.outText(
+                                "По запросу «" + query + "» ничего не найдено"
+                            );
+                        } else {
+                            Product product = ConsoleIO.chooseFromList(found);
+                            if (product != null) {
+                                service.tryAddProduct(order, product);
+                                ConsoleIO.outText("Добавлено: " + product);
+                            }
+                        }
+                    } catch (SQLException e) {
+                        ConsoleIO.outText(
+                            "Ошибка базы данных: " + e.getMessage()
+                        );
+                    }
+                }
+                case 2 -> {
+                    if (items.isEmpty()) {
+                        ConsoleIO.outText("Ваш заказ пока пуст");
+                    } else {
+                        ConsoleIO.showList(items);
+                    }
+                }
+                case 3 -> {
+                    if (items.isEmpty()) {
+                        ConsoleIO.outText("Убирать нечего, заказ пуст");
+                    } else {
+                        Product product = ConsoleIO.chooseFromList(items);
+                        if (product != null) {
+                            order.removeItem(product);
+                            ConsoleIO.outText("Убрано: " + product);
+                        }
+                    }
+                }
+                case 4 -> {
+                    if (items.isEmpty()) {
+                        ConsoleIO.outText("Добавьте хотя бы один товар");
+                    } else {
+                        pick = false;
+                    }
+                }
+                case 5 -> {
+                    ConsoleIO.outText("Оформление отменено");
+                    return;
+                }
+                default -> ConsoleIO.outText(
+                    "Некорректное значение, введите число от 1 до 5"
+                );
+            }
+        }
 
-    private void showClientOrders(Client client) {}
+        TypeDelivery type = ConsoleIO.chooseTypeDelivery(order.getStatus());
+        if (service.assignCourier(order, type)) {
+            ConsoleIO.outText(
+                "Итого: " +
+                    (order.getCost() + type.getPrice()) +
+                    " руб. где " +
+                    type.getPrice() +
+                    " руб. за доставку "
+            );
+        } else {
+            ConsoleIO.outText(
+                "Заказ №" +
+                    order.getId() +
+                    " оформлен. Свободных курьеров сейчас нет, заказ ожидает назначения\n" +
+                    "Итого: " +
+                    (order.getCost() + type.getPrice()) +
+                    " руб. где " +
+                    type.getPrice() +
+                    " руб. за доставку "
+            );
+        }
+        service.addOrder(order);
+        ConsoleIO.outText("Заказ успешно добавлен");
+    }
 
-    private void changeDelivery(Client client) {}
+    private void showClientOrders(Client client) {
+        List<Order> result = service.findAllClientOrders(client.getId());
+        ConsoleIO.showList(result);
+    }
 
-    private void cancelOrder(Client client) {}
+    private void changeDelivery(Client client) {
+        List<Order> result = service.findAllClientOrders(client.getId());
+        Order order = ConsoleIO.chooseFromList(result);
+        if (order == null) {
+            return;
+        }
+        TypeDelivery type = ConsoleIO.chooseTypeDelivery(order.getStatus());
+        if (type == null) {
+            return;
+        }
+        if (service.assignCourier(order, type)) {
+            ConsoleIO.outText("Способ доставки изменён: " + type.getLabel());
+        } else {
+            ConsoleIO.outText(
+                "Свободных курьеров сейчас нет, заказ ожидает назначения"
+            );
+        }
+    }
+
+    private void cancelOrder(Client client) {
+        List<Order> result = service.findAllClientOrders(client.getId());
+        Order order = ConsoleIO.chooseFromList(result);
+        if (
+            order == null ||
+            !order.getStatus().canTransitionTo(OrderStatus.CANCELLED)
+        ) {
+            ConsoleIO.outText("Уже невозможно отменить заказ");
+            return;
+        }
+        service.cancelOrder(order);
+        ConsoleIO.outText("Заказ успешно отменен");
+    }
 
     private void showAllOrders() {
         ConsoleIO.showList(service.getOrders());

@@ -32,4 +32,8 @@ public enum OrderStatus {
     public String getLabel() {
         return label;
     }
+
+    public String toString() {
+        return label;
+    }
 }

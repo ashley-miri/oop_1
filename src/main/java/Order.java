@@ -88,4 +88,18 @@ public class Order {
         }
         return items.remove(item);
     }
+
+    public String toString() {
+        return (
+            "Заказ №" +
+            id +
+            " — " +
+            status.getLabel() +
+            ", товаров: " +
+            items.size() +
+            ", " +
+            getCost() +
+            " руб."
+        );
+    }
 }

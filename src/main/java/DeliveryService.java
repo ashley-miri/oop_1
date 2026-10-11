@@ -129,4 +129,9 @@ public class DeliveryService {
         }
         return result;
     }
+
+    public void cancelOrder(Order order) {
+        releaseCourier(order);
+        order.setStatus(OrderStatus.CANCELLED);
+    }
 }
