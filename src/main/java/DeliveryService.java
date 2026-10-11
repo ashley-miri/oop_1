@@ -1,5 +1,3 @@
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -109,5 +107,26 @@ public class DeliveryService {
         }
         order.addItem(product);
         return true;
+    }
+
+    public void changeStatus(Order order, OrderStatus status) {
+        order.setStatus(status);
+        if (
+            status == OrderStatus.DELIVERED ||
+            status == OrderStatus.CANCELLED ||
+            status == OrderStatus.CREATED
+        ) {
+            releaseCourier(order);
+        }
+    }
+
+    public List<Order> findAllClientOrders(UUID clientId) {
+        List<Order> result = new ArrayList<>();
+        for (Order order : orders) {
+            if (clientId.equals(order.getClientId())) {
+                result.add(order);
+            }
+        }
+        return result;
     }
 }
