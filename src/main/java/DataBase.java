@@ -172,6 +172,15 @@ public class DataBase {
         );
     }
 
+    public AuthUser findUserByLogin(String login) throws SQLException {
+        Client client = findClientByLogin(login);
+        if (client != null) {
+            return client;
+        }
+        Admin admin = findAdminByLogin(login);
+        return admin;
+    }
+
     public void saveProduct(Product product) throws SQLException {
         String sql =
             "INSERT INTO products (name, name_lower, cost, weight) VALUES (?, ?, ?, ?)";
