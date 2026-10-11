@@ -28,6 +28,10 @@ public abstract class AuthUser extends Person {
         return login;
     }
 
+    public UserRole getRole() {
+        return role;
+    }
+
     public String getPasswordHash() {
         return passwordHash;
     }
