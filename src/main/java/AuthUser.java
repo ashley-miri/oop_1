@@ -7,6 +7,7 @@ import java.util.UUID;
 public abstract class AuthUser extends Person {
 
     private final String login;
+    private final UserRole role;
     private String passwordHash;
 
     protected AuthUser(
@@ -14,11 +15,13 @@ public abstract class AuthUser extends Person {
         String name,
         String phone,
         String login,
-        String passwordHash
+        String passwordHash,
+        UserRole role
     ) {
         super(id, name, phone);
         this.login = login;
         this.passwordHash = passwordHash;
+        this.role = role;
     }
 
     public String getLogin() {

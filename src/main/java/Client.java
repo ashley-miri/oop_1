@@ -14,7 +14,7 @@ public class Client extends AuthUser {
         String login,
         String passwordHash
     ) {
-        super(id, name, phone, login, passwordHash); // Вызов конструктора Person
+        super(id, name, phone, login, passwordHash, UserRole.CLIENT); // Вызов конструктора Person
         this.deliveryAddress = deliveryAddress;
     }
 

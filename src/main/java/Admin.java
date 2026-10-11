@@ -9,6 +9,6 @@ public class Admin extends AuthUser {
         String login,
         String passwordHash
     ) {
-        super(id, name, phone, login, passwordHash);
+        super(id, name, phone, login, passwordHash, UserRole.ADMIN);
     }
 }
