@@ -17,7 +17,10 @@ public class Menu {
 
     public void mainMenu() {
         while (true) {
-            int i = ConsoleIO.readInt("Выберете:\n1)Вход\n2)Регистрация");
+            ConsoleIO.outText(
+                "Выберете:\n1)Вход\n2)Регистрация\n3)Выход из программы"
+            );
+            int i = ConsoleIO.readInt("Ввод");
             switch (i) {
                 case 1 -> {
                     AuthUser user = loginMenu();
@@ -30,6 +33,9 @@ public class Menu {
                 }
                 case 2 -> {
                     newUser();
+                }
+                case 3 -> {
+                    return;
                 }
                 default -> {
                     ConsoleIO.outText(
