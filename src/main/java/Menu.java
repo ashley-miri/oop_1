@@ -42,6 +42,7 @@ public class Menu {
                     ConsoleIO.outText(
                         "Некорректное значение выбирите цифру 1 или 2"
                     );
+                    ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
                     break;
                 }
             }
@@ -91,9 +92,12 @@ public class Menu {
                 case 5 -> {
                     return;
                 }
-                default -> ConsoleIO.outText(
-                    "Некорректное значение, введите число от 1 до 5"
-                );
+                default -> {
+                    ConsoleIO.outText(
+                        "Некорректное значение, введите число от 1 до 5"
+                    );
+                    ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
+                }
             }
         }
     }
@@ -121,9 +125,12 @@ public class Menu {
                 case 7 -> {
                     return;
                 }
-                default -> ConsoleIO.outText(
-                    "Некорректное значение, введите число от 1 до 8"
-                );
+                default -> {
+                    ConsoleIO.outText(
+                        "Некорректное значение, введите число от 1 до 8"
+                    );
+                    ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
+                }
             }
         }
     }
@@ -207,6 +214,7 @@ public class Menu {
                             "Ошибка базы данных: " + e.getMessage()
                         );
                     }
+                    ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
                 }
                 case 2 -> {
                     if (items.isEmpty()) {
@@ -214,6 +222,7 @@ public class Menu {
                     } else {
                         ConsoleIO.showList(items);
                     }
+                    ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
                 }
                 case 3 -> {
                     if (items.isEmpty()) {
@@ -225,6 +234,7 @@ public class Menu {
                             ConsoleIO.outText("Убрано: " + product);
                         }
                     }
+                    ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
                 }
                 case 4 -> {
                     if (items.isEmpty()) {
@@ -232,14 +242,19 @@ public class Menu {
                     } else {
                         pick = false;
                     }
+                    ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
                 }
                 case 5 -> {
                     ConsoleIO.outText("Оформление отменено");
+                    ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
                     return;
                 }
-                default -> ConsoleIO.outText(
-                    "Некорректное значение, введите число от 1 до 5"
-                );
+                default -> {
+                    ConsoleIO.outText(
+                        "Некорректное значение, введите число от 1 до 5"
+                    );
+                    ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
+                }
             }
         }
 
@@ -304,6 +319,7 @@ public class Menu {
             !order.getStatus().canTransitionTo(OrderStatus.CANCELLED)
         ) {
             ConsoleIO.outText("Уже невозможно отменить заказ");
+            ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
             return;
         }
         service.cancelOrder(order);

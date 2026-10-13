@@ -31,7 +31,7 @@ public class ConsoleIO {
 
     public static void pause(String promt) {
         outText(promt);
-        String str = scan.nextLine().trim();
+        String str = scan.nextLine();
     }
 
     public static void outText(String text) {
