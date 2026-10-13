@@ -70,6 +70,7 @@ public class DeliveryService {
         return null;
     }
 
+    //тип берётся из самого заказа, а не передаётся отдельно
     private boolean tryAssignCourier(Order order) {
         Courier courier = findFreeCourier(order.getTypeDelivery());
         if (courier == null) {

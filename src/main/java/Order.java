@@ -10,7 +10,7 @@ public class Order {
     private final UUID clientId;
     private final List<Product> items = new ArrayList<>();
     private OrderStatus status = OrderStatus.CREATED;
-    private TypeDelivery type;
+    private TypeDelivery typeDelivery;
     private UUID courierId;
     private String time;
 
@@ -23,9 +23,6 @@ public class Order {
     //getters
     public int getId() {
         return id;
-    }
-    publiv TypeDelivery getType(){
-        return type;
     }
 
     public UUID getClientId() {
@@ -44,6 +41,11 @@ public class Order {
         return Collections.unmodifiableList(items);
     }
 
+    public TypeDelivery getTypeDelivery() {
+        return typeDelivery;
+    }
+
+    //стоимость только товаров
     public int getCost() {
         int cost = 0;
         for (Product item : items) {
@@ -56,8 +58,9 @@ public class Order {
         return typeDelivery == null ? 0 : typeDelivery.getPrice();
     }
 
+    //товары + доставка
     public int getTotalCost() {
-         return getCost() + getDeliveryCost();
+        return getCost() + getDeliveryCost();
     }
 
     public OrderStatus getStatus() {
@@ -73,7 +76,7 @@ public class Order {
         this.time = time;
     }
 
-    public void setType(TypeDelivery typeDelivery) {
+    public void setTypeDelivery(TypeDelivery typeDelivery) {
         if (status != OrderStatus.CREATED) {
             throw new IllegalStateException(
                 "Способ доставки можно менять только у заказа в статусе «" +
@@ -81,6 +84,7 @@ public class Order {
                     "», текущий статус: " +
                     status
             );
+        }
         this.typeDelivery = typeDelivery;
     }
 
