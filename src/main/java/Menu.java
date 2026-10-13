@@ -21,7 +21,7 @@ public class Menu {
             ConsoleIO.outText(
                 "Выберете:\n1)Вход\n2)Регистрация\n3)Выход из программы"
             );
-            int i = ConsoleIO.readInt("Ввод");
+            int i = ConsoleIO.readInt("Ввод: ");
             switch (i) {
                 case 1 -> {
                     AuthUser user = loginMenu();
@@ -168,6 +168,7 @@ public class Menu {
         } catch (SQLException e) {
             ConsoleIO.outText("Ошибка базы данных: " + e.getMessage());
         }
+        ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
     }
 
     private void createOrder(Client client) {
@@ -264,7 +265,7 @@ public class Menu {
             );
         }
         service.addOrder(order);
-        ConsoleIO.outText("Заказ успешно добавлен");
+        ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
     }
 
     private void showClientOrders(Client client) {
@@ -291,6 +292,7 @@ public class Menu {
                 "Свободных курьеров сейчас нет, заказ ожидает назначения"
             );
         }
+        ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
     }
 
     private void cancelOrder(Client client) {
@@ -306,6 +308,7 @@ public class Menu {
         }
         service.cancelOrder(order);
         ConsoleIO.outText("Заказ успешно отменен");
+        ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
     }
 
     private void showAllOrders() {
@@ -334,6 +337,7 @@ public class Menu {
         }
         service.changeStatus(order, status);
         ConsoleIO.outText("Статус заказа изменён: " + status.getLabel());
+        ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
     }
 
     private void showCouriers() {
@@ -367,6 +371,7 @@ public class Menu {
         } catch (SQLException e) {
             ConsoleIO.outText("Ошибка базы данных: " + e.getMessage());
         }
+        ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
     }
 
     private void addProduct() {
@@ -382,6 +387,7 @@ public class Menu {
         } catch (SQLException e) {
             ConsoleIO.outText("Ошибка базы данных: " + e.getMessage());
         }
+        ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
     }
 
     private void addAdmin() {
@@ -407,5 +413,6 @@ public class Menu {
         } catch (SQLException e) {
             ConsoleIO.outText("Ошибка базы данных: " + e.getMessage());
         }
+        ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
     }
 }

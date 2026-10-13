@@ -29,6 +29,11 @@ public class ConsoleIO {
         }
     }
 
+    public static void pause(String promt) {
+        outText(promt);
+        String str = scan.nextLine().trim();
+    }
+
     public static void outText(String text) {
         System.out.print("\n" + text);
     }
