@@ -17,6 +17,7 @@ public class Menu {
 
     public void mainMenu() {
         while (true) {
+            ConsoleIO.clear();
             ConsoleIO.outText(
                 "Выберете:\n1)Вход\n2)Регистрация\n3)Выход из программы"
             );
@@ -49,6 +50,7 @@ public class Menu {
 
     private AuthUser loginMenu() {
         while (true) {
+            ConsoleIO.clear();
             String login = ConsoleIO.readStr("Введите логин: ");
             String passwd = ConsoleIO.readStr("Введите пароль: ");
             try {
@@ -72,6 +74,7 @@ public class Menu {
 
     private void clientMenu(Client client) {
         while (true) {
+            ConsoleIO.clear();
             ConsoleIO.outText(
                 "Меню клиента:\n" +
                     "1)Новый заказ\n" +
@@ -97,6 +100,7 @@ public class Menu {
 
     private void adminMenu(Admin admin) {
         while (true) {
+            ConsoleIO.clear();
             ConsoleIO.outText(
                 "Меню администратора:\n" +
                     "1)Все заказы\n" +
@@ -137,6 +141,7 @@ public class Menu {
     }
 
     private void newUser() {
+        ConsoleIO.clear();
         String name = ConsoleIO.readStr("Введите фио: ");
         String phone = ConsoleIO.readStr("Телефон: ");
         String address = ConsoleIO.readStr("Адрес: ");
@@ -169,6 +174,7 @@ public class Menu {
         Order order = service.createOrder(client.getId());
         boolean pick = true;
         while (pick) {
+            ConsoleIO.clear();
             List<Product> items = order.getItems();
             ConsoleIO.outText(
                 "1)Добавить товар\n" +
@@ -262,11 +268,13 @@ public class Menu {
     }
 
     private void showClientOrders(Client client) {
+        ConsoleIO.clear();
         List<Order> result = service.findAllClientOrders(client.getId());
         ConsoleIO.showList(result);
     }
 
     private void changeDelivery(Client client) {
+        ConsoleIO.clear();
         List<Order> result = service.findAllClientOrders(client.getId());
         Order order = ConsoleIO.chooseFromList(result);
         if (order == null) {
@@ -286,6 +294,7 @@ public class Menu {
     }
 
     private void cancelOrder(Client client) {
+        ConsoleIO.clear();
         List<Order> result = service.findAllClientOrders(client.getId());
         Order order = ConsoleIO.chooseFromList(result);
         if (
@@ -300,10 +309,12 @@ public class Menu {
     }
 
     private void showAllOrders() {
+        ConsoleIO.clear();
         ConsoleIO.showList(service.getOrders());
     }
 
     private void changeOrderStatus() {
+        ConsoleIO.clear();
         Order order = ConsoleIO.chooseFromList(service.getOrders());
         if (order == null) {
             return;
@@ -326,10 +337,12 @@ public class Menu {
     }
 
     private void showCouriers() {
+        ConsoleIO.clear();
         ConsoleIO.chooseFromList(service.getCouriers());
     }
 
     private void addCourier() {
+        ConsoleIO.clear();
         String name = ConsoleIO.readStr("ФИО курьера: ");
         String phone = ConsoleIO.readStr("Телефон: ");
 
@@ -357,6 +370,7 @@ public class Menu {
     }
 
     private void addProduct() {
+        ConsoleIO.clear();
         String name = ConsoleIO.readStr("Название товара: ");
         int cost = ConsoleIO.readPositiveInt("Цена, руб.: ");
         int weight = ConsoleIO.readPositiveInt("Вес, г: ");
@@ -371,6 +385,7 @@ public class Menu {
     }
 
     private void addAdmin() {
+        ConsoleIO.clear();
         String name = ConsoleIO.readStr("ФИО администратора: ");
         String phone = ConsoleIO.readStr("Телефон: ");
         try {

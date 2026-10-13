@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -149,6 +150,23 @@ public class ConsoleIO {
                 return value;
             }
             ConsoleIO.outText("Значение должно быть больше нуля");
+        }
+    }
+
+    public static void clear() {
+        String os = System.getProperty("os.name");
+        ProcessBuilder aboba;
+        if (os.toLowerCase().contains("windows")) {
+            aboba = new ProcessBuilder("cmd", "/c", "cls");
+        } else {
+            aboba = new ProcessBuilder("clear");
+        }
+        try {
+            aboba.inheritIO().start().waitFor();
+        } catch (IOException e) {
+            //тотально похуй
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 }
