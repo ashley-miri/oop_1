@@ -127,6 +127,11 @@ public class DeliveryService {
         ) {
             releaseCourier(order);
         }
+        if (
+            status == OrderStatus.DELIVERED || status == OrderStatus.CANCELLED
+        ) {
+            assignWaitingOrder(order.getTypeDelivery());
+        }
     }
 
     public List<Order> findAllClientOrders(UUID clientId) {
@@ -140,9 +145,9 @@ public class DeliveryService {
     }
 
     public void cancelOrder(Order order) {
-        releaseCourier(order);
         TypeDelivery oldType = order.getTypeDelivery();
         order.setStatus(OrderStatus.CANCELLED);
+        releaseCourier(order);
         if (oldType != TypeDelivery.SELF_PICKUP) {
             assignWaitingOrder(oldType);
         }

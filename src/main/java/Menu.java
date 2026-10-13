@@ -258,7 +258,6 @@ public class Menu {
                     } else {
                         pick = false;
                     }
-                    ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
                 }
                 case 5 -> {
                     ConsoleIO.outText("Оформление отменено");
@@ -364,15 +363,13 @@ public class Menu {
             if (!order.getStatus().canTransitionTo(next)) {
                 continue;
             }
-            //назначение курьера и самовывоз — это выбор способа доставки,
-            //он идёт через assignCourier, а не через ручную смену статуса
             if (
-                next == OrderStatus.ASSIGNED || next == OrderStatus.SELF_PICKUP
+                next == OrderStatus.ASSIGNED ||
+                next == OrderStatus.SELF_PICKUP ||
+                next == OrderStatus.CREATED
             ) {
                 continue;
             }
-            //заказ на самовывоз, возвращённый в CREATED, ждал бы курьера
-            //типа SELF_PICKUP, которого не существует
             if (
                 next == OrderStatus.CREATED &&
                 order.getTypeDelivery() == TypeDelivery.SELF_PICKUP
