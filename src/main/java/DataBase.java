@@ -262,4 +262,27 @@ public class DataBase {
         }
         return result;
     }
+
+    private boolean isEmpty(String table) throws SQLException {
+        String sql = "SELECT 1 FROM " + table + " LIMIT 1";
+        try (
+            Connection conn = connect();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql)
+        ) {
+            return !rs.next();
+        }
+    }
+
+    public boolean hasNoProducts() throws SQLException {
+        return isEmpty("products");
+    }
+
+    public boolean hasNoCouriers() throws SQLException {
+        return isEmpty("couriers");
+    }
+
+    public boolean hasNoAdmins() throws SQLException {
+        return isEmpty("admins");
+    }
 }
