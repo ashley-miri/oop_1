@@ -301,6 +301,7 @@ public class Menu {
         if (order == null) {
             return;
         }
+        TypeDelivery old_type = order.getTypeDelivery();
         TypeDelivery type = ConsoleIO.chooseTypeDelivery(order.getStatus());
         if (type == null) {
             return;
@@ -312,6 +313,7 @@ public class Menu {
                 "Свободных курьеров сейчас нет, заказ ожидает назначения"
             );
         }
+        service.assignWaitingOrder(old_type);
         ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
     }
 
@@ -327,7 +329,9 @@ public class Menu {
             ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
             return;
         }
+        TypeDelivery old_type = order.getTypeDelivery();
         service.cancelOrder(order);
+        service.assignWaitingOrder(old_type);
         ConsoleIO.outText("Заказ успешно отменен");
         ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
     }
@@ -366,6 +370,10 @@ public class Menu {
             return;
         }
         service.changeStatus(order, status);
+        if (status == OrderStatus.DELIVERED) {
+            TypeDelivery old_type = order.getTypeDelivery();
+            service.assignWaitingOrder(old_type);
+        }
         ConsoleIO.outText("Статус заказа изменён: " + status.getLabel());
         ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
     }

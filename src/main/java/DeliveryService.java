@@ -131,4 +131,19 @@ public class DeliveryService {
         releaseCourier(order);
         order.setStatus(OrderStatus.CANCELLED);
     }
+
+    public void assignWaitingOrder(TypeDelivery type) {
+        if (type == SELF_PICKUP) {
+            return;
+        }
+        for (Order order : orders) {
+            if (
+                order.getStatus() == OrderStatus.CREATED &&
+                order.getTypeDelivery() == type
+            ) {
+                tryAssignCourier(order);
+                return;
+            }
+        }
+    }
 }
