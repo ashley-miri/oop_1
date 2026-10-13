@@ -32,7 +32,7 @@ public class DeliveryService {
     public void addCourier(Courier courier) {
         if (courier != null) {
             couriers.add(courier);
-            service.assignWaitingOrder(courier.getType());
+            assignWaitingOrder(courier.getType());
         }
     }
 
@@ -84,23 +84,30 @@ public class DeliveryService {
     }
 
     public boolean assignCourier(Order order, TypeDelivery type) {
-        TypeDelivery oldType = order.getTypeDelivery();
         if (type == null) {
             return false;
         }
+        TypeDelivery oldType = order.getTypeDelivery();
+        boolean hadCourier = order.getCourierId() != null;
+
         if (order.getStatus() != OrderStatus.CREATED) {
             order.setStatus(OrderStatus.CREATED);
             releaseCourier(order);
-            if (oldType != TypeDelivery.SELF_PICKUP) {
-                assignWaitingOrder(oldType);
-            }
         }
         order.setTypeDelivery(type);
+
+        boolean result;
         if (type == TypeDelivery.SELF_PICKUP) {
             order.setStatus(OrderStatus.SELF_PICKUP);
-            return true;
+            result = true;
+        } else {
+            result = tryAssignCourier(order);
         }
-        return tryAssignCourier(order);
+
+        if (hadCourier) {
+            assignWaitingOrder(oldType);
+        }
+        return result;
     }
 
     public boolean tryAddProduct(Order order, Product product) {
@@ -119,7 +126,6 @@ public class DeliveryService {
             status == OrderStatus.CREATED
         ) {
             releaseCourier(order);
-            assignWaitingOrder(order.getTypeDelivery());
         }
     }
 
