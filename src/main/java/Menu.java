@@ -147,21 +147,6 @@ public class Menu {
         return login;
     }
 
-    private String costText(Order order) {
-        TypeDelivery type = order.getTypeDelivery();
-        return (
-            "Итого: " +
-            order.getTotalCost() +
-            " руб., из них " +
-            order.getDeliveryCost() +
-            " руб. за доставку (" +
-            type.getLabel() +
-            ", срок: " +
-            type.getTerm() +
-            ")"
-        );
-    }
-
     private void newUser() {
         ConsoleIO.clear();
         String name = ConsoleIO.readStr("Введите фио: ");
@@ -191,6 +176,22 @@ public class Menu {
             ConsoleIO.outText("Ошибка базы данных: " + e.getMessage());
         }
         ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
+    }
+
+    //одна строка с ценой и сроком — используется и при оформлении, и при смене доставки
+    private String costText(Order order) {
+        TypeDelivery type = order.getTypeDelivery();
+        return (
+            "Итого: " +
+            order.getTotalCost() +
+            " руб., из них " +
+            order.getDeliveryCost() +
+            " руб. за доставку (" +
+            type.getLabel() +
+            ", срок: " +
+            type.getTerm() +
+            ")"
+        );
     }
 
     private void createOrder(Client client) {
@@ -257,6 +258,7 @@ public class Menu {
                     } else {
                         pick = false;
                     }
+                    ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
                 }
                 case 5 -> {
                     ConsoleIO.outText("Оформление отменено");
@@ -271,9 +273,11 @@ public class Menu {
                 }
             }
         }
+
         TypeDelivery type = ConsoleIO.chooseTypeDelivery(order.getStatus());
+        boolean assigned = service.assignCourier(order, type);
         service.addOrder(order);
-        if (service.assignCourier(order, type)) {
+        if (assigned) {
             ConsoleIO.outText(
                 "Заказ №" + order.getId() + " оформлен: " + order.getStatus()
             );
@@ -301,19 +305,29 @@ public class Menu {
         if (order == null) {
             return;
         }
-        TypeDelivery old_type = order.getTypeDelivery();
+        ConsoleIO.outText(
+            "Текущий способ доставки: " + order.getTypeDelivery().getLabel()
+        );
         TypeDelivery type = ConsoleIO.chooseTypeDelivery(order.getStatus());
         if (type == null) {
+            ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
+            return;
+        }
+        if (type == order.getTypeDelivery()) {
+            ConsoleIO.outText("Этот способ доставки уже выбран");
+            ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
             return;
         }
         if (service.assignCourier(order, type)) {
             ConsoleIO.outText("Способ доставки изменён: " + type.getLabel());
         } else {
             ConsoleIO.outText(
-                "Свободных курьеров сейчас нет, заказ ожидает назначения"
+                "Способ доставки изменён: " +
+                    type.getLabel() +
+                    ". Свободных курьеров сейчас нет, заказ ожидает назначения"
             );
         }
-        service.assignWaitingOrder(old_type);
+        ConsoleIO.outText(costText(order));
         ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
     }
 
@@ -329,9 +343,7 @@ public class Menu {
             ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
             return;
         }
-        TypeDelivery old_type = order.getTypeDelivery();
         service.cancelOrder(order);
-        service.assignWaitingOrder(old_type);
         ConsoleIO.outText("Заказ успешно отменен");
         ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
     }
@@ -352,11 +364,15 @@ public class Menu {
             if (!order.getStatus().canTransitionTo(next)) {
                 continue;
             }
+            //назначение курьера и самовывоз — это выбор способа доставки,
+            //он идёт через assignCourier, а не через ручную смену статуса
             if (
                 next == OrderStatus.ASSIGNED || next == OrderStatus.SELF_PICKUP
             ) {
                 continue;
             }
+            //заказ на самовывоз, возвращённый в CREATED, ждал бы курьера
+            //типа SELF_PICKUP, которого не существует
             if (
                 next == OrderStatus.CREATED &&
                 order.getTypeDelivery() == TypeDelivery.SELF_PICKUP
@@ -370,10 +386,6 @@ public class Menu {
             return;
         }
         service.changeStatus(order, status);
-        if (status == OrderStatus.DELIVERED) {
-            TypeDelivery old_type = order.getTypeDelivery();
-            service.assignWaitingOrder(old_type);
-        }
         ConsoleIO.outText("Статус заказа изменён: " + status.getLabel());
         ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
     }
