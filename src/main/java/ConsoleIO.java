@@ -41,6 +41,7 @@ public class ConsoleIO {
     private static <T> T browse(List<T> list, boolean select) {
         if (list.isEmpty()) {
             outText("Лист пуст");
+            ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
             return null;
         }
 
