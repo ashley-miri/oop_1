@@ -147,6 +147,21 @@ public class Menu {
         return login;
     }
 
+    private String costText(Order order) {
+        TypeDelivery type = order.getTypeDelivery();
+        return (
+            "Итого: " +
+            order.getTotalCost() +
+            " руб., из них " +
+            order.getDeliveryCost() +
+            " руб. за доставку (" +
+            type.getLabel() +
+            ", срок: " +
+            type.getTerm() +
+            ")"
+        );
+    }
+
     private void newUser() {
         ConsoleIO.clear();
         String name = ConsoleIO.readStr("Введите фио: ");
@@ -242,7 +257,6 @@ public class Menu {
                     } else {
                         pick = false;
                     }
-                    ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
                 }
                 case 5 -> {
                     ConsoleIO.outText("Оформление отменено");
@@ -257,29 +271,20 @@ public class Menu {
                 }
             }
         }
-
         TypeDelivery type = ConsoleIO.chooseTypeDelivery(order.getStatus());
+        service.addOrder(order);
         if (service.assignCourier(order, type)) {
             ConsoleIO.outText(
-                "Итого: " +
-                    (order.getCost() + type.getPrice()) +
-                    " руб. где " +
-                    type.getPrice() +
-                    " руб. за доставку "
+                "Заказ №" + order.getId() + " оформлен: " + order.getStatus()
             );
         } else {
             ConsoleIO.outText(
                 "Заказ №" +
                     order.getId() +
-                    " оформлен. Свободных курьеров сейчас нет, заказ ожидает назначения\n" +
-                    "Итого: " +
-                    (order.getCost() + type.getPrice()) +
-                    " руб. где " +
-                    type.getPrice() +
-                    " руб. за доставку "
+                    " оформлен. Свободных курьеров сейчас нет, заказ ожидает назначения"
             );
         }
-        service.addOrder(order);
+        ConsoleIO.outText(costText(order));
         ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
     }
 
@@ -340,12 +345,21 @@ public class Menu {
         }
         List<OrderStatus> allowed = new ArrayList<>();
         for (OrderStatus next : OrderStatus.values()) {
-            if (
-                next != OrderStatus.ASSIGNED &&
-                order.getStatus().canTransitionTo(next)
-            ) {
-                allowed.add(next);
+            if (!order.getStatus().canTransitionTo(next)) {
+                continue;
             }
+            if (
+                next == OrderStatus.ASSIGNED || next == OrderStatus.SELF_PICKUP
+            ) {
+                continue;
+            }
+            if (
+                next == OrderStatus.CREATED &&
+                order.getTypeDelivery() == TypeDelivery.SELF_PICKUP
+            ) {
+                continue;
+            }
+            allowed.add(next);
         }
         OrderStatus status = ConsoleIO.chooseFromList(allowed);
         if (status == null) {

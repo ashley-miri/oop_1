@@ -10,6 +10,7 @@ public class Order {
     private final UUID clientId;
     private final List<Product> items = new ArrayList<>();
     private OrderStatus status = OrderStatus.CREATED;
+    private TypeDelivery type;
     private UUID courierId;
     private String time;
 
@@ -22,6 +23,9 @@ public class Order {
     //getters
     public int getId() {
         return id;
+    }
+    publiv TypeDelivery getType(){
+        return type;
     }
 
     public UUID getClientId() {
@@ -48,6 +52,14 @@ public class Order {
         return cost;
     }
 
+    public int getDeliveryCost() {
+        return typeDelivery == null ? 0 : typeDelivery.getPrice();
+    }
+
+    public int getTotalCost() {
+         return getCost() + getDeliveryCost();
+    }
+
     public OrderStatus getStatus() {
         return status;
     }
@@ -59,6 +71,17 @@ public class Order {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public void setType(TypeDelivery typeDelivery) {
+        if (status != OrderStatus.CREATED) {
+            throw new IllegalStateException(
+                "Способ доставки можно менять только у заказа в статусе «" +
+                    OrderStatus.CREATED +
+                    "», текущий статус: " +
+                    status
+            );
+        this.typeDelivery = typeDelivery;
     }
 
     public boolean addItem(Product item) {
@@ -95,10 +118,12 @@ public class Order {
             id +
             " — " +
             status.getLabel() +
+            ", доставка: " +
+            (typeDelivery == null ? "не выбрана" : typeDelivery.getLabel()) +
             ", товаров: " +
             items.size() +
-            ", " +
-            getCost() +
+            ", итого " +
+            getTotalCost() +
             " руб."
         );
     }

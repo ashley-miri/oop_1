@@ -104,6 +104,7 @@ public class ConsoleIO {
             status != OrderStatus.CREATED
         ) {
             outText("Заказ передан в доставку или уже доставлен");
+            ConsoleIO.pause("Нажмите ENTER чтобы продолжить");
             return null;
         }
         if (

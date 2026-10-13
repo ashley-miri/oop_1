@@ -70,16 +70,15 @@ public class DeliveryService {
         return null;
     }
 
-    private boolean tryAssignCourier(Order order, TypeDelivery type) {
-        Courier courier = findFreeCourier(type);
+    private boolean tryAssignCourier(Order order) {
+        Courier courier = findFreeCourier(order.getTypeDelivery());
         if (courier == null) {
             return false;
-        } else {
-            order.setStatus(OrderStatus.ASSIGNED);
-            order.setCourierId(courier.getId());
-            courier.setBusy(true);
-            return true;
         }
+        order.setStatus(OrderStatus.ASSIGNED);
+        order.setCourierId(courier.getId());
+        courier.setBusy(true);
+        return true;
     }
 
     public boolean assignCourier(Order order, TypeDelivery type) {
@@ -87,18 +86,15 @@ public class DeliveryService {
             return false;
         }
         if (order.getStatus() != OrderStatus.CREATED) {
-            releaseCourier(order);
             order.setStatus(OrderStatus.CREATED);
+            releaseCourier(order);
         }
+        order.setTypeDelivery(type);
         if (type == TypeDelivery.SELF_PICKUP) {
             order.setStatus(OrderStatus.SELF_PICKUP);
             return true;
         }
-        if (tryAssignCourier(order, type)) {
-            return true;
-        } else {
-            return false;
-        }
+        return tryAssignCourier(order);
     }
 
     public boolean tryAddProduct(Order order, Product product) {
